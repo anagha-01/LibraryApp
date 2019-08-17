@@ -5,32 +5,34 @@ var book=[
         'title':'Randaamoozham',
         'author':'M T Vasudevan Nair',
         'publisher':'Cuurent Books',
-        'pic':"/img/mt.jpg"
+        'pic':'/img/mt.jpg',
         
     },
     {
         'title':'Khasakkinte ithihasam',
         'author':'O V Vijayan',
         'publisher':'D C Books',
+        'pic':"/img/ov.jpg",
         
     },
     {
         'title':'Balyakalasakhi',
         'author':'Vaikkam Muhammad Bashir',
         'publisher':'D C Books',
+        'pic':"/img/bash.jpg"
         
     },
     {
         'title':'Neermathalam Poothakalam',
         'author':'Madhavikkutty',
         'publisher':'Curent Books',
-        
+        'pic':"/img/madh.jpg"
     },
     {
         'title':'Araachar',
         'author':'K R Meera',
         'publisher':'D C Books',
-        
+        'pic':"/img/kr.jpg"
     }
     // {
     //     'title':'Oru Desathinte Katha',
@@ -68,32 +70,32 @@ var aut=[
     {
         'name':'M T Vasudevan Nair',
         'dob':'9 August 1933',
-        'place':'Kudallur'
-
+        'place':'Kudallur',
+        'pic':"/img/mt.jpg"
     },
     {
         'name':'O V Vijayan',
         'dob':'2 July 1930',
-        'place':'Palakkad'
-
+        'place':'Palakkad',
+        'pic':"/img/ov.jpg"
     },
     {
         'name':'Vaikkam Muhammad Bashir',
         'dob':'21 January 1908',
-        'place':'Thalayolapparambu'
-
+        'place':'Thalayolapparambu',
+        'pic':"/img/bash.jpg"
     },
     {
         'name':'Madhavikkutty',
         'dob':'31 March 1934',
-        'place':'Punnayurkkulam'
-
+        'place':'Punnayurkkulam',
+        'pic':"/img/madh.jpg"
     },
     {
         'name':'K R Meera',
         'dob':'19 February 1970',
-        'place':'Sasthamkotta'
-
+        'place':'Sasthamkotta',
+        'pic':"/img/kr.jpg"
     }
 ]
 app.set('view engine','ejs')
@@ -135,7 +137,7 @@ app.get('/books',(req,res)=>{
 ) 
 }
 )
-app.get('/readmore/:id',(req,res)=>{                                                     //Read more link from Authors                             
+app.get('/more/:id',(req,res)=>{                                                     //Read more link from Authors                             
 
     const y=req.params.id;
     res.render('second',{'aut': aut[y],
