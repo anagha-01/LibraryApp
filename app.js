@@ -99,7 +99,7 @@ var aut=[
     }
 ]
 app.set('view engine','ejs')
-app.get('/readmore/:id',(req,res)=>{                                                  //Read more link from books
+app.get('/readmore/:id',(req,res)=>{                                                  //Readmore link from books
 
     const x=req.params.id;
     res.render('single',{'book': book[x],
