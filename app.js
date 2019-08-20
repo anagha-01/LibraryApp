@@ -113,7 +113,7 @@ app.use(Express.static(__dirname+"/public"))
 app.get('/',(req,res)=>{       
     res.render('index',
 {
-    nav:[{link:'/books',title:'books'},{link:'/authors',title:'authors'}],
+    nav:[{link:'/books',title:'books'},{link:'/authors',title:'authors'},{link:'/login',title:'login'},{link:'/signup',title:'signup'}],
     title:"Library"
 }
 ) 
@@ -122,7 +122,7 @@ app.get('/',(req,res)=>{
 app.get('/authors',(req,res)=>{       
     res.render('authors',
 {
-    nav:[{link:'/books',title:'books'},{link:'/authors',title:'authors'}],
+    nav:[{link:'/books',title:'books'},{link:'/authors',title:'authors'},{link:'/login',title:'login'},{link:'/signup',title:'signup'}],
     title:"Authors",aut:aut
 }
 ) 
@@ -131,18 +131,24 @@ app.get('/authors',(req,res)=>{
 app.get('/books',(req,res)=>{       
     res.render('books',
 {
-    nav:[{link:'/books',title:'books'},{link:'/authors',title:'authors'}],
+    nav:[{link:'/books',title:'books'},{link:'/authors',title:'authors'},{link:'/login',title:'login'},{link:'/signup',title:'signup'}],
     title:"Books",book:book
 }
 ) 
 }
 )
+app.get('/login',(req,res)=>{
+    res.render('login')
+})
+app.get('/signup',(req,res)=>{
+    res.render('signup')
+})
 app.get('/more/:id',(req,res)=>{                                                     //Read more link from Authors                             
 
     const y=req.params.id;
     res.render('second',{'aut': aut[y],
 
-    nav:[{link:'/books',title:'books'},{link:'/authors',title:'authors'}],
+    nav:[{link:'/books',title:'books'},{link:'/authors',title:'authors'},{link:'/login',title:'login'},{link:'/signup',title:'signup'}],
 
     title:'Library'}   )
 
