@@ -1,39 +1,42 @@
 const Express=require('express')
+var bodyParser=require('body-parser')
+const Mongoose=require('mongoose')
+var request=require('request')
 var app=new Express()
-var book=[
-    {
-        'title':'Randaamoozham',
-        'author':'M T Vasudevan Nair',
-        'publisher':'Cuurent Books',
-        'pic':'/img/mt.jpg',
+// var book=[
+//     {
+//         'title':'Randaamoozham',
+//         'author':'M T Vasudevan Nair',
+//         'publisher':'Cuurent Books',
+//         'pic':'/img/mt.jpg',
         
-    },
-    {
-        'title':'Khasakkinte ithihasam',
-        'author':'O V Vijayan',
-        'publisher':'D C Books',
-        'pic':"/img/ov.jpg",
+//     },
+//     {
+//         'title':'Khasakkinte ithihasam',
+//         'author':'O V Vijayan',
+//         'publisher':'D C Books',
+//         'pic':"/img/ov.jpg",
         
-    },
-    {
-        'title':'Balyakalasakhi',
-        'author':'Vaikkam Muhammad Bashir',
-        'publisher':'D C Books',
-        'pic':"/img/bash.jpg"
+//     },
+//     {
+//         'title':'Balyakalasakhi',
+//         'author':'Vaikkam Muhammad Bashir',
+//         'publisher':'D C Books',
+//         'pic':"/img/bash.jpg"
         
-    },
-    {
-        'title':'Neermathalam Poothakalam',
-        'author':'Madhavikkutty',
-        'publisher':'Curent Books',
-        'pic':"/img/madh.jpg"
-    },
-    {
-        'title':'Araachar',
-        'author':'K R Meera',
-        'publisher':'D C Books',
-        'pic':"/img/kr.jpg"
-    }
+//     },
+//     {
+//         'title':'Neermathalam Poothakalam',
+//         'author':'Madhavikkutty',
+//         'publisher':'Curent Books',
+//         'pic':"/img/madh.jpg"
+//     },
+//     {
+//         'title':'Araachar',
+//         'author':'K R Meera',
+//         'publisher':'D C Books',
+//         'pic':"/img/kr.jpg"
+//     }
     // {
     //     'title':'Oru Desathinte Katha',
     //     'author':'S K Pottakkad',
@@ -65,7 +68,7 @@ var book=[
         
     // }
 
-]
+//]
 var aut=[
     {
         'name':'M T Vasudevan Nair',
@@ -99,6 +102,15 @@ var aut=[
     }
 ]
 app.set('view engine','ejs')
+app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({extended:true}))
+const BookModel=Mongoose.model("bookdetails",{
+    name:String,
+    author:String,
+    publisher:String,
+    img:String
+})
+Mongoose.connect("mongodb://localhost:27017/bookdb")
 app.get('/readmore/:id',(req,res)=>{                                                  //Readmore link from books
 
     const x=req.params.id;
@@ -113,7 +125,7 @@ app.use(Express.static(__dirname+"/public"))
 app.get('/',(req,res)=>{       
     res.render('index',
 {
-    nav:[{link:'/books',title:'books'},{link:'/authors',title:'authors'},{link:'/login',title:'login'},{link:'/signup',title:'signup'}],
+    nav:[{link:'/books',title:'books'},{link:'/authors',title:'authors'},{link:'/addb',title:'Add Books'},{link:'/viewb',title:'View Books'}],
     title:"Library"
 }
 ) 
@@ -122,21 +134,21 @@ app.get('/',(req,res)=>{
 app.get('/authors',(req,res)=>{       
     res.render('authors',
 {
-    nav:[{link:'/books',title:'books'},{link:'/authors',title:'authors'},{link:'/login',title:'login'},{link:'/signup',title:'signup'}],
+    nav:[{link:'/books',title:'books'},{link:'/authors',title:'authors'},{link:'/addb',title:'Add Books'},{link:'/viewb',title:'View Books'}],
     title:"Authors",aut:aut
 }
 ) 
 }
 )
-app.get('/books',(req,res)=>{       
-    res.render('books',
-{
-    nav:[{link:'/books',title:'books'},{link:'/authors',title:'authors'},{link:'/login',title:'login'},{link:'/signup',title:'signup'}],
-    title:"Books",book:book
-}
-) 
-}
-)
+const getdataApi="http://localhost:3000/getdatas"
+
+app.get('/books',(req,res)=>{
+    request(getdataApi,(error,response,body)=>{
+        var data=JSON.parse(body)
+        console.log(data)
+        res.render('books',{data:data,nav:[{link:'/books',title:'books'},{link:'/authors',title:'authors'},{link:'/addb',title:'Add Books'},{link:'/viewb',title:'View Books'}]})
+    })        
+})
 app.get('/login',(req,res)=>{
     res.render('login')
 })
@@ -148,10 +160,46 @@ app.get('/more/:id',(req,res)=>{                                                
     const y=req.params.id;
     res.render('second',{'aut': aut[y],
 
-    nav:[{link:'/books',title:'books'},{link:'/authors',title:'authors'},{link:'/login',title:'login'},{link:'/signup',title:'signup'}],
+    nav:[{link:'/books',title:'books'},{link:'/authors',title:'authors'},{link:'/addb',title:'Add Books'},{link:'/viewb',title:'View Books'}],
 
     title:'Library'}   )
 
+})
+app.get('/addb',(req,res)=>{
+    res.render('addb')
+})
+app.post('/readApi',(req,res)=>{
+    console.log(req.body)
+    var book=new BookModel(req.body)
+    var result=book.save((error,data)=>{
+        if(error){
+            throw error
+        }
+        else{
+            res.send(result)
+        }
+    })
+    
+})
+
+app.get('/getdatas',(req,res)=>{
+    result=BookModel.find((error,data)=>{
+        if(error)
+        {
+            throw error
+        }
+        else{
+            res.send(data)
+        }
+    })
+})
+app.get('/viewb',(req,res)=>{
+    res.render('viewb',
+    {
+        nav:[{link:'/books',title:'books'},{link:'/authors',title:'authors'},{link:'/addb',title:'Add Books'},{link:'/viewb',title:'View Books'}],
+        title:"Library"
+    }
+    ) 
 })
 app.listen(process.env.PORT || 3000,()=>{
     console.log("Server is running on http://localhost:3000")
